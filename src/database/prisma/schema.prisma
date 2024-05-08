@@ -22,3 +22,8 @@ model Comment {
   updatedAt DateTime @updatedAt
   isDeleted Boolean  @default(false)
 }
+
+model Like {
+  id    Int @id @default(autoincrement())
+  likes Int @default(0)
+}
