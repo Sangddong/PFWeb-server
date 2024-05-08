@@ -9,3 +9,8 @@ export type UpdateCommentsDto = {
   content: string;
   password: string;
 };
+
+export type DeleteCommentsDto = {
+  id: number;
+  password: string;
+};

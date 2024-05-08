@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { CreateCommentsDto, UpdateCommentsDto } from './comments.dto';
+import {
+  CreateCommentsDto,
+  DeleteCommentsDto,
+  UpdateCommentsDto,
+} from './comments.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -21,4 +25,9 @@ export class CommentsService {
   }
 
   //댓글 삭제 기능
+  async deleteComment(data: DeleteCommentsDto) {
+    await this.prismaService.comment.delete({
+      where: { id: data.id },
+    });
+  }
 }
