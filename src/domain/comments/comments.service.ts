@@ -32,8 +32,9 @@ export class CommentsService {
     await this.findComment(data.id);
     await this.checkPassword(data.id, data.password);
 
-    await this.prismaService.comment.delete({
+    await this.prismaService.comment.update({
       where: { id: data.id },
+      data: { isDeleted: true },
     });
   }
 
