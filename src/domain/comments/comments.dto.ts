@@ -3,3 +3,9 @@ export type CreateCommentsDto = {
   content: string;
   password: string;
 };
+
+export type UpdateCommentsDto = {
+  id: number;
+  content: string;
+  password: string;
+};

@@ -1,7 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { CreateCommentsDto } from './comments.dto';
+import { CreateCommentsDto, UpdateCommentsDto } from './comments.dto';
 
 @Controller()
 export class CommentsController {
@@ -13,5 +13,10 @@ export class CommentsController {
   @Post()
   createComment(@Body() data: CreateCommentsDto) {
     this.commentsService.createComment(data);
+  }
+
+  @Patch()
+  updateComment(@Body() data: UpdateCommentsDto) {
+    this.commentsService.editComment(data);
   }
 }
