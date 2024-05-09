@@ -27,3 +27,9 @@ model Like {
   id    Int @id @default(autoincrement())
   likes Int @default(0)
 }
+
+model View {
+  id Int @id @default(autoincrement())
+  todayView Int @default(0)
+  totalView Int @default(0)
+}

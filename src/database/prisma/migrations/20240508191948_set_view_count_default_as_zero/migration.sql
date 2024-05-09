@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "View" ALTER COLUMN "todayView" SET DEFAULT 0,
+ALTER COLUMN "totalView" SET DEFAULT 0;
