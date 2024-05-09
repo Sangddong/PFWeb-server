@@ -48,4 +48,12 @@ export class ViewService {
       select: { totalView: true, todayView: true },
     });
   }
+
+  async resetView() {
+    return await this.prismaService.view.upsert({
+      where: { id: 1 },
+      create: { totalView: 0, todayView: 0 },
+      update: { todayView: 0 },
+    });
+  }
 }

@@ -5,7 +5,6 @@ import {
   DeleteCommentsDto,
   UpdateCommentsDto,
 } from './comments.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CommentsService {
