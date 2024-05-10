@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import {
@@ -7,7 +7,7 @@ import {
   UpdateCommentsDto,
 } from './comments.dto';
 
-@Controller()
+@Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsService: CommentsService,
@@ -27,5 +27,10 @@ export class CommentsController {
   @Delete()
   deleteComment(@Body() data: DeleteCommentsDto) {
     this.commentsService.deleteComment(data);
+  }
+
+  @Get()
+  countComments() {
+    return this.commentsService.countComments();
   }
 }

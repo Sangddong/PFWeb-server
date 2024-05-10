@@ -55,4 +55,11 @@ export class CommentsService {
 
     if (comment.password !== commentPassword) throw new Error('wrong password');
   }
+
+  //댓글 개수 반환
+  async countComments() {
+    return await this.prismaService.comment.count({
+      where: { isDeleted: false },
+    });
+  }
 }
