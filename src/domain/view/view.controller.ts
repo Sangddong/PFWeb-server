@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ViewService } from './view.service';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 
 @Controller('view')
 export class ViewController {
   constructor(private readonly viewService: ViewService) {}
 
   @Get()
-  async incrementView() {
+  async getView() {
     return await this.viewService.incrementView();
   }
 
