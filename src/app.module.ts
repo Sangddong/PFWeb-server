@@ -6,6 +6,7 @@ import { CommentsModule } from './domain/comments/comments.module';
 import { LikesModule } from './domain/likes/likes.module';
 import { ViewModule } from './domain/view/view.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ApiController } from './api/api.controller';
 @Module({
   imports: [
     CommentsModule,
@@ -14,7 +15,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ViewModule,
     ScheduleModule.forRoot(),
   ],
-  controllers: [AppController],
+  controllers: [AppController, ApiController],
   providers: [AppService],
 })
 export class AppModule {}
