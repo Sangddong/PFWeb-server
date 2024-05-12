@@ -62,4 +62,16 @@ export class CommentsService {
       where: { isDeleted: false },
     });
   }
+
+  async getComments() {
+    return await this.prismaService.comment.findMany({
+      where: { isDeleted: false },
+      select: {
+        nickname: true,
+        content: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
 }

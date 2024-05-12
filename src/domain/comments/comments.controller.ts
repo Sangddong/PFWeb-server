@@ -15,22 +15,27 @@ export class CommentsController {
   ) {}
 
   @Post()
-  createComment(@Body() data: CreateCommentsDto) {
-    this.commentsService.createComment(data);
+  async createComment(@Body() data: CreateCommentsDto) {
+    await this.commentsService.createComment(data);
   }
 
   @Patch()
-  updateComment(@Body() data: UpdateCommentsDto) {
-    this.commentsService.editComment(data);
+  async updateComment(@Body() data: UpdateCommentsDto) {
+    await this.commentsService.editComment(data);
   }
 
   @Delete()
-  deleteComment(@Body() data: DeleteCommentsDto) {
-    this.commentsService.deleteComment(data);
+  async deleteComment(@Body() data: DeleteCommentsDto) {
+    await this.commentsService.deleteComment(data);
   }
 
   @Get()
-  countComments() {
-    return this.commentsService.countComments();
+  async countComments() {
+    return await this.commentsService.countComments();
+  }
+
+  @Get('comments')
+  async showComments() {
+    return await this.commentsService.getComments();
   }
 }
