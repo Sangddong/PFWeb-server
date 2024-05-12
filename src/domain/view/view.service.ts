@@ -5,55 +5,46 @@ import { PrismaService } from 'src/database/prisma/prisma.service';
 export class ViewService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async incrementTodayView() {
-    const todayView = await this.prismaService.view.findUnique({
+  // 조회수만 읽는 메서드
+  async getTodayView() {
+    const view = await this.prismaService.view.findUnique({
       where: { id: 1 },
       select: { todayView: true },
     });
-
-    if (!todayView) {
-      return await this.prismaService.view.create({ data: { todayView: 1 } });
-    } else {
-      return await this.prismaService.view.update({
-        where: { id: 1 },
-        data: { todayView: todayView.todayView + 1 },
-      });
-    }
+    return view ? view.todayView : 0;
   }
 
-  async incrementTotalView() {
-    const totalView = await this.prismaService.view.findUnique({
+  async getTotalView() {
+    const view = await this.prismaService.view.findUnique({
       where: { id: 1 },
       select: { totalView: true },
     });
-
-    if (!totalView) {
-      return await this.prismaService.view.create({
-        data: { totalView: 1 },
-      });
-    } else {
-      return await this.prismaService.view.update({
-        where: { id: 1 },
-        data: { totalView: totalView.totalView + 1 },
-      });
-    }
+    return view ? view.totalView : 0;
   }
 
-  async incrementView() {
-    await this.incrementTodayView();
-    await this.incrementTotalView();
-
-    return await this.prismaService.view.findUnique({
+  // 조회수를 증가시키는 메서드
+  async incrementTodayView() {
+    const todayView = await this.getTodayView();
+    return await this.prismaService.view.update({
       where: { id: 1 },
-      select: { totalView: true, todayView: true },
+      data: { todayView: todayView + 1 },
     });
   }
 
+  async incrementTotalView() {
+    const totalView = await this.getTotalView();
+    return await this.prismaService.view.update({
+      where: { id: 1 },
+      data: { totalView: totalView + 1 },
+    });
+  }
+
+  // 조회수 초기화
   async resetView() {
     return await this.prismaService.view.upsert({
       where: { id: 1 },
-      create: { totalView: 0, todayView: 0 },
-      update: { todayView: 0 },
+      create: { todayView: 0, totalView: 0 },
+      update: { todayView: 0, totalView: 0 },
     });
   }
 }
