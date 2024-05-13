@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ViewService } from './view.service';
 import { Cron } from '@nestjs/schedule';
 
@@ -8,12 +8,12 @@ export class ViewController {
 
   @Get('today/read')
   async getTodayView() {
-    return await this.viewService.getTodayView(); /
+    return await this.viewService.getTodayView();
   }
 
-  @Get('today/increment')
+  @Post('today/increment')
   async incrementTodayView() {
-    return await this.viewService.incrementTodayView(); 
+    return await this.viewService.incrementTodayView();
   }
 
   @Get('total/read')
@@ -21,9 +21,9 @@ export class ViewController {
     return await this.viewService.getTotalView();
   }
 
-  @Get('total/increment')
+  @Post('total/increment')
   async incrementTotalView() {
-    return await this.viewService.incrementTotalView(); 
+    return await this.viewService.incrementTotalView();
   }
 
   @Cron('0 15 * * *')
