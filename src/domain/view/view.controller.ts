@@ -6,24 +6,14 @@ import { Cron } from '@nestjs/schedule';
 export class ViewController {
   constructor(private readonly viewService: ViewService) {}
 
-  @Get('today/read')
+  @Get('today')
   async getTodayView() {
     return await this.viewService.getTodayView();
   }
 
-  @Post('today/increment')
-  async incrementTodayView() {
-    return await this.viewService.incrementTodayView();
-  }
-
-  @Get('total/read')
+  @Get('total')
   async getTotalView() {
     return await this.viewService.getTotalView();
-  }
-
-  @Post('total/increment')
-  async incrementTotalView() {
-    return await this.viewService.incrementTotalView();
   }
 
   @Cron('0 15 * * *')

@@ -7,35 +7,18 @@ export class ViewService {
 
   // 조회수만 읽는 메서드
   async getTodayView() {
-    const view = await this.prismaService.view.findUnique({
+    return await this.prismaService.view.upsert({
       where: { id: 1 },
-      select: { todayView: true },
+      create: { todayView: 1 },
+      update: { todayView: { increment: 1 } },
     });
-    return view ? view.todayView : 0;
   }
 
   async getTotalView() {
-    const view = await this.prismaService.view.findUnique({
+    return await this.prismaService.view.upsert({
       where: { id: 1 },
-      select: { totalView: true },
-    });
-    return view ? view.totalView : 0;
-  }
-
-  // 조회수를 증가시키는 메서드
-  async incrementTodayView() {
-    const todayView = await this.getTodayView();
-    return await this.prismaService.view.update({
-      where: { id: 1 },
-      data: { todayView: todayView + 1 },
-    });
-  }
-
-  async incrementTotalView() {
-    const totalView = await this.getTotalView();
-    return await this.prismaService.view.update({
-      where: { id: 1 },
-      data: { totalView: totalView + 1 },
+      create: { totalView: 1 },
+      update: { totalView: { increment: 1 } },
     });
   }
 
