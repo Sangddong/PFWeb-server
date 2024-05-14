@@ -27,7 +27,7 @@ export class ViewService {
     return await this.prismaService.view.upsert({
       where: { id: 1 },
       create: { todayView: 0, totalView: 0 },
-      update: { todayView: 0, totalView: 0 },
+      update: { todayView: 0 },
     });
   }
 }
