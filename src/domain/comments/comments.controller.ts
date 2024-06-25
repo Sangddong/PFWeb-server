@@ -20,19 +20,10 @@ export class CommentsController {
   }
 
   @Patch()
-  async updateComment(@Body() data: UpdateCommentsDto) {
-    await this.commentsService.editComment(data);
+  async updateComment(@Body() data: UpdateCommentsDto | DeleteCommentsDto) {
+    if (UpdateCommentsDto) await this.commentsService.editComment(data);
+    else await this.commentsService.deleteComment(data);
   }
-
-  @Delete()
-  async deleteComment(@Body() data: DeleteCommentsDto) {
-    await this.commentsService.deleteComment(data);
-  }
-
-  // @Get()
-  // async countComments() {
-  //   return await this.commentsService.countComments();
-  // }
 
   @Get()
   async showComments() {

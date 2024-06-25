@@ -16,7 +16,7 @@ export class CommentsService {
   }
 
   //댓글 수정 기능
-  async editComment(data: UpdateCommentsDto) {
+  async editComment(data: UpdateCommentsDto | DeleteCommentsDto) {
     await this.findComment(data.id);
     await this.checkPassword(data.id, data.password);
 
