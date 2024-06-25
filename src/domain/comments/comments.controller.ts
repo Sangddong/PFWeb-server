@@ -29,12 +29,12 @@ export class CommentsController {
     await this.commentsService.deleteComment(data);
   }
 
-  @Get()
-  async countComments() {
-    return await this.commentsService.countComments();
-  }
+  // @Get()
+  // async countComments() {
+  //   return await this.commentsService.countComments();
+  // }
 
-  @Get('comments')
+  @Get()
   async showComments() {
     return await this.commentsService.getComments();
   }
