@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import {
