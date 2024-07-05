@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import {
@@ -26,7 +34,10 @@ export class CommentsController {
   }
 
   @Get()
-  async showComments() {
-    return await this.commentsService.getComments();
+  async getComments(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.commentsService.getComments(page, limit);
   }
 }

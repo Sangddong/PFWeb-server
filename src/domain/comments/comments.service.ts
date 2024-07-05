@@ -63,15 +63,15 @@ export class CommentsService {
     });
   }
 
-  async getComments() {
+  //댓글 반환 기능 (페이지네이션)
+  async getComments(limit: number, page: number) {
+    const take = Math.max(limit, 1);
+    const skip = (page - 1) * take;
     return await this.prismaService.comment.findMany({
       where: { isDeleted: false },
-      select: {
-        nickname: true,
-        content: true,
-        createdAt: true,
-      },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: 'desc' },
+      take,
+      skip,
     });
   }
 }
