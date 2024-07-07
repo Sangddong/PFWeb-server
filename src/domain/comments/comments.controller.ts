@@ -28,9 +28,8 @@ export class CommentsController {
   }
 
   @Patch()
-  async updateComment(@Body() data: UpdateCommentsDto | DeleteCommentsDto) {
-    if (UpdateCommentsDto) await this.commentsService.editComment(data);
-    else await this.commentsService.deleteComment(data);
+  async updateComment(@Body() data: DeleteCommentsDto) {
+    return await this.commentsService.deleteComment(data);
   }
 
   @Get()
@@ -39,5 +38,10 @@ export class CommentsController {
     @Query('limit', ParseIntPipe) limit: number,
   ) {
     return await this.commentsService.getComments(page, limit);
+  }
+
+  @Get('count')
+  async getTotalComment() {
+    return await this.commentsService.getTotalComments();
   }
 }

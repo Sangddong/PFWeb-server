@@ -16,7 +16,7 @@ export class CommentsService {
   }
 
   //댓글 수정 기능
-  async editComment(data: UpdateCommentsDto | DeleteCommentsDto) {
+  async editComment(data: DeleteCommentsDto) {
     await this.findComment(data.id);
     await this.checkPassword(data.id, data.password);
 
@@ -29,12 +29,15 @@ export class CommentsService {
   //댓글 삭제 기능
   async deleteComment(data: DeleteCommentsDto) {
     await this.findComment(data.id);
-    await this.checkPassword(data.id, data.password);
+    const checkPassword = await this.checkPassword(data.id, data.password);
+
+    if (!checkPassword) return false;
 
     await this.prismaService.comment.update({
       where: { id: data.id },
       data: { isDeleted: true },
     });
+    return true;
   }
 
   //댓글 존재 확인
@@ -53,7 +56,8 @@ export class CommentsService {
   async checkPassword(commentId: number, commentPassword: string) {
     const comment = await this.findComment(commentId);
 
-    if (comment.password !== commentPassword) throw new Error('wrong password');
+    if (comment.password !== commentPassword) return false;
+    return true;
   }
 
   //댓글 개수 반환
@@ -64,14 +68,23 @@ export class CommentsService {
   }
 
   //댓글 반환 기능 (페이지네이션)
-  async getComments(limit: number, page: number) {
+  async getComments(page: number, limit: number) {
     const take = Math.max(limit, 1);
     const skip = (page - 1) * take;
-    return await this.prismaService.comment.findMany({
+    console.log('take: ', take);
+    console.log('skip: ', skip);
+    const comments = await this.prismaService.comment.findMany({
       where: { isDeleted: false },
       orderBy: { createdAt: 'desc' },
       take,
       skip,
+    });
+    return comments;
+  }
+
+  async getTotalComments() {
+    return await this.prismaService.comment.count({
+      where: { isDeleted: false },
     });
   }
 }
