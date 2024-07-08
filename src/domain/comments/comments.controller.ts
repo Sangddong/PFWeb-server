@@ -9,11 +9,7 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import {
-  CreateCommentsDto,
-  DeleteCommentsDto,
-  UpdateCommentsDto,
-} from './comments.dto';
+import { CreateCommentsDto, DeleteCommentsDto } from './comments.dto';
 
 @Controller('comments')
 export class CommentsController {

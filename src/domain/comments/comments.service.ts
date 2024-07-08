@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import {
-  CreateCommentsDto,
-  DeleteCommentsDto,
-  UpdateCommentsDto,
-} from './comments.dto';
+import { CreateCommentsDto, DeleteCommentsDto } from './comments.dto';
 
 @Injectable()
 export class CommentsService {
@@ -71,8 +67,7 @@ export class CommentsService {
   async getComments(page: number, limit: number) {
     const take = Math.max(limit, 1);
     const skip = (page - 1) * take;
-    console.log('take: ', take);
-    console.log('skip: ', skip);
+
     const comments = await this.prismaService.comment.findMany({
       where: { isDeleted: false },
       orderBy: { createdAt: 'desc' },
