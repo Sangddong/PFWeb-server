@@ -2,13 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { CreateCommentsDto, DeleteCommentsDto } from './comments.dto';
 
+import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+import * as timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 @Injectable()
 export class CommentsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   //댓글 작성 기능
   async createComment(data: CreateCommentsDto) {
-    await this.prismaService.comment.create({ data });
+    const now = dayjs().tz('Asia/Seoul').format().replace('+09:00', 'Z');
+    const newData = { ...data, createdAt: now };
+
+    await this.prismaService.comment.create({ data: newData });
   }
 
   //댓글 수정 기능
