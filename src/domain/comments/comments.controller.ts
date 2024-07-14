@@ -1,11 +1,15 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import {
-  CreateCommentsDto,
-  DeleteCommentsDto,
-  UpdateCommentsDto,
-} from './comments.dto';
+import { CreateCommentsDto, DeleteCommentsDto } from './comments.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -20,22 +24,20 @@ export class CommentsController {
   }
 
   @Patch()
-  async updateComment(@Body() data: UpdateCommentsDto) {
-    await this.commentsService.editComment(data);
-  }
-
-  @Delete()
-  async deleteComment(@Body() data: DeleteCommentsDto) {
-    await this.commentsService.deleteComment(data);
+  async updateComment(@Body() data: DeleteCommentsDto) {
+    return await this.commentsService.deleteComment(data);
   }
 
   @Get()
-  async countComments() {
-    return await this.commentsService.countComments();
+  async getComments(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.commentsService.getComments(page, limit);
   }
 
-  @Get('comments')
-  async showComments() {
-    return await this.commentsService.getComments();
+  @Get('count')
+  async getTotalComment() {
+    return await this.commentsService.getTotalComments();
   }
 }
