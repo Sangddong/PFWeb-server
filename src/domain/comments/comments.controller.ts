@@ -24,7 +24,7 @@ export class CommentsController {
   }
 
   @Patch()
-  async updateComment(@Body() data: DeleteCommentsDto) {
+  async deleteComment(@Body() data: DeleteCommentsDto) {
     return await this.commentsService.deleteComment(data);
   }
 
