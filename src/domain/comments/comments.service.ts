@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { CreateCommentsDto, DeleteCommentsDto } from './comments.dto';
+import * as bcrypt from 'bcrypt';
 
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
@@ -14,8 +15,10 @@ export class CommentsService {
 
   //댓글 작성 기능
   async createComment(data: CreateCommentsDto) {
+    const salt = bcrypt.genSaltSync(12);
+    const hash = bcrypt.hashSync(data.password, salt);
     const now = dayjs().tz('Asia/Seoul').format().replace('+09:00', 'Z');
-    const newData = { ...data, createdAt: now };
+    const newData = { ...data, password: hash, createdAt: now };
 
     await this.prismaService.comment.create({ data: newData });
   }
@@ -60,8 +63,9 @@ export class CommentsService {
   //패스워드 일치 검사
   async checkPassword(commentId: number, commentPassword: string) {
     const comment = await this.findComment(commentId);
+    const checked = bcrypt.compare(comment.password, commentPassword);
 
-    if (comment.password !== commentPassword) return false;
+    if (!checked) return false;
     return true;
   }
 
