@@ -34,7 +34,9 @@ jobs:
         CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: |
-        ssh -i $EC2_SSH_KEY $EC2_USER@$EC2_HOST << 'EOF'
+        echo "$EC2_SSH_KEY" > key.pem
+        chmod 600 key.pem
+        ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
           cd /path/to/your/app
           git pull origin main
           npm install
