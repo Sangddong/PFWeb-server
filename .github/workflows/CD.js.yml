@@ -33,17 +33,10 @@ jobs:
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
     - name: Deploy to EC2
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ${{ secrets.EC2_USER }}
-        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-        PORT: ${{ secrets.PORT }}
-        CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: |
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
           cd /path/to/your/app
           git pull origin main
           npm install
@@ -54,3 +47,4 @@ jobs:
           export DATABASE_URL=$DATABASE_URL
           pm2 restart all
         EOF
+
