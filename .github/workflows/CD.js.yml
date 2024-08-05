@@ -36,7 +36,7 @@ jobs:
       run: |
         echo "$EC2_SSH_KEY" > /tmp/key.pem
         chmod 400 /tmp/key.pem
-        ssh -v -i /tmp/key.pem $EC2_USER@$EC2_HOST << "EOF"
+        ssh -v -i /tmp/key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << "EOF"
           echo "Connection successful"
           cd /home/ec2-user/PFWeb-server || exit
           git pull origin main
