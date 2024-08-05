@@ -36,6 +36,7 @@ jobs:
       run: |
         echo "$EC2_SSH_KEY" > key.pem
         chmod 600 key.pem
+        ssh -T git@gitlab.com
         ssh -v -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo "SSH 연결 성공"'
           cd /home/ec2-user/PFWeb-server
           git pull origin main
