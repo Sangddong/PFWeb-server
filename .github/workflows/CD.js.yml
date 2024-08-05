@@ -24,28 +24,29 @@ jobs:
     - name: Build application
       run: npm run build
 
-    - name: Deploy to EC2
-      env:
-        EC2_USER: ${{ secrets.EC2_USER }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-        PORT: ${{ secrets.PORT }}
-        CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      run: |
-        echo "$EC2_SSH_KEY" > key.pem
-        chmod 400 key.pem
-        ssh -v -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          echo "Connection successful"
-          cd /home/ec2-user/PFWeb-server || exit
-          git pull origin main
-          npm install
-          npm run build
-          export JWT_SECRET_KEY=$JWT_SECRET_KEY
-          export PORT=$PORT
-          export CORS_ORIGIN=$CORS_ORIGIN
-          export DATABASE_URL=$DATABASE_URL
-          pm2 restart all
-        EOF
+- name: Deploy to EC2
+  env:
+    EC2_USER: ${{ secrets.EC2_USER }}
+    EC2_HOST: ${{ secrets.EC2_HOST }}
+    EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+    JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+    PORT: ${{ secrets.PORT }}
+    CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  run: |
+    echo "$EC2_SSH_KEY" > /tmp/key.pem
+    chmod 400 /tmp/key.pem
+    ssh -v -i /tmp/key.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $EC2_USER@$EC2_HOST << "EOF"
+      echo "Connection successful"
+      cd /home/ec2-user/PFWeb-server || exit
+      git pull origin main
+      npm install
+      npm run build
+      export JWT_SECRET_KEY=$JWT_SECRET_KEY
+      export PORT=$PORT
+      export CORS_ORIGIN=$CORS_ORIGIN
+      export DATABASE_URL=$DATABASE_URL
+      pm2 restart all
+    EOF
+
 
