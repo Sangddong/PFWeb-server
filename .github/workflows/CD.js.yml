@@ -36,7 +36,7 @@ jobs:
       run: |
         echo "$EC2_SSH_KEY" > key.pem
         chmod 600 key.pem
-        ssh -v -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+        ssh -v -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo "Connection successful"; pwd; ls -la'
           cd /home/ec2-user/PFWeb-server
           git pull origin main
           npm install
