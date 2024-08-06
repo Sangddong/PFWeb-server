@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  DOCKER_IMAGE: ghcr.io/${{github.actor}}/github-actions-auto
+  DOCKER_IMAGE: ghcr.io/sangddong/github-actions-auto
   VERSION: ${{github.sha}}
   NAME: go_cicd
   EC2_USER: ${{ secrets.EC2_USER }}
@@ -43,7 +43,7 @@ jobs:
         with:
           builder: ${{steps.buildx.outputs.name}}
           push: true
-          tags: ghcr.io/sangddong/github-actions-auto:latest
+          tags: ${{env.DOCKER_IMAGE}}
           
   deploy:
     needs: build
