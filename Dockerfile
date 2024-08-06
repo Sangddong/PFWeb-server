@@ -18,4 +18,5 @@ COPY --from=build ./app/package*.json ./
 RUN npm i --omit-dev
 
 EXPOSE 3001
+
 CMD [ "npm", "run", "start:prod" ]
