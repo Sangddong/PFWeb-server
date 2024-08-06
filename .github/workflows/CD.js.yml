@@ -8,9 +8,6 @@ env:
   DOCKER_IMAGE: ghcr.io/sangddong/github-actions-auto
   VERSION: ${{github.sha}}
   NAME: go_cicd
-  EC2_USER: ${{ secrets.EC2_USER }}
-  EC2_HOST: ${{ secrets.EC2_HOST }}
-  EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
   PORT: ${{ secrets.PORT }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
@@ -58,5 +55,15 @@ jobs:
           password: ${{secrets.GHCR_TOKEN}}
       - name: Docker run
         run: |
-          docker stop ${{env.NAME}} %%docker rm ${{env.NAME}} && docker rmi ${{env.DOCKER_IMAGE}}:latest
-          docker run -d -p 80:3000 --name go_cicd --restart always ${{env.DOCKER_IMAGE}}:latest
+          docker stop ${{ env.NAME }} || true
+          docker rm ${{ env.NAME }} || true
+          docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+            docker run -d -p 80:3000 \
+            --name ${{ env.NAME }} \
+            --restart always \
+            -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+            -e PORT=${{ secrets.PORT }} \
+            -e CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            ${{ env.DOCKER_IMAGE }}:latest
+  
