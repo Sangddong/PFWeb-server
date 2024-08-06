@@ -47,6 +47,8 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go]
     steps:
+      - name: Show GitHub actor
+        run: echo "The GitHub actor is ${{ github.actor }}"
       - name: Login to ghcr
         uses: docker/login-action@v1
         with: 
