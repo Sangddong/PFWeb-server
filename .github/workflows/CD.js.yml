@@ -47,8 +47,6 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go]
     steps:
-      - name: Show GitHub actor
-        run: echo "The GitHub actor is ${{ github.actor }}"
       - name: Login to ghcr
         uses: docker/login-action@v1
         with: 
@@ -57,15 +55,14 @@ jobs:
           password: ${{secrets.GHCR_TOKEN}}
       - name: Docker run
         run: |
-          docker stop ${{ env.NAME }} || true
-          docker rm ${{ env.NAME }} || true
-          docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+          sudo docker stop ${{ env.NAME }} || true
+          sudo docker rm ${{ env.NAME }} || true
+          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
             docker run -d -p 80:3000 \
-            --name ${{ env.NAME }} \
-            --restart always \
+            —name ${{ env.NAME }} \
+            —restart always \
             -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             -e PORT=${{ secrets.PORT }} \
             -e CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
             -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
             ${{ env.DOCKER_IMAGE }}:latest
-  
