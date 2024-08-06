@@ -58,9 +58,9 @@ jobs:
           sudo docker stop ${{ env.NAME }} || true
           sudo docker rm ${{ env.NAME }} || true
           sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-            docker run -d -p 80:3000 \
-            —name ${{ env.NAME }} \
-            —restart always \
+          sudo docker run -d -p 80:3000 \
+            --name ${{ env.NAME }} \
+            --restart always \
             -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             -e PORT=${{ secrets.PORT }} \
             -e CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
