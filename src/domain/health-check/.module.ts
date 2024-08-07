@@ -6,5 +6,6 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   controllers: [HealthCheckController],
   imports: [TerminusModule, HttpModule],
+  exports: [HealthCheckController],
 })
 export class HealthCheckModule {}
