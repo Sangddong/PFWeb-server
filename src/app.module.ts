@@ -1,3 +1,4 @@
+import { HealthCheckModule } from './domain/health-check/.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -14,6 +15,7 @@ import { ApiController } from './api/api.controller';
     LikesModule,
     ViewModule,
     ScheduleModule.forRoot(),
+    HealthCheckModule,
   ],
   controllers: [AppController, ApiController],
   providers: [AppService],

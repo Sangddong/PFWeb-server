@@ -6,19 +6,19 @@ export class ViewService {
   constructor(private readonly prismaService: PrismaService) {}
 
   // 조회수만 읽는 메서드
-  async getTodayView() {
-    return await this.prismaService.view.upsert({
+  async getView() {
+    await this.updateView();
+
+    return await this.prismaService.view.findFirst({
       where: { id: 1 },
-      create: { todayView: 1 },
-      update: { todayView: { increment: 1 } },
     });
   }
 
-  async getTotalView() {
-    return await this.prismaService.view.upsert({
+  async updateView() {
+    await this.prismaService.view.upsert({
       where: { id: 1 },
       create: { totalView: 1 },
-      update: { totalView: { increment: 1 } },
+      update: { totalView: { increment: 1 }, todayView: { increment: 1 } },
     });
   }
 
