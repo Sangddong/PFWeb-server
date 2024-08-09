@@ -11,7 +11,7 @@ export class ViewController {
     return await this.viewService.getView();
   }
 
-  @Cron('0 20 15 * * *')
+  @Cron('0 0 0 * * *')
   async resetTodayView() {
     await this.viewService.resetView();
   }
