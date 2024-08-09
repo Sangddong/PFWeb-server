@@ -1,4 +1,3 @@
-import { HealthCheckModule } from './domain/health-check/.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -8,6 +7,7 @@ import { LikesModule } from './domain/likes/likes.module';
 import { ViewModule } from './domain/view/view.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ApiController } from './api/api.controller';
+import { HealthCheckModule } from './domain/health-check/health-check.module';
 @Module({
   imports: [
     CommentsModule,
