@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+      
+permissions:
+  id-token: write
+  contents: read
+  
 env:
   DOCKER_IMAGE: ghcr.io/sangddong/github-actions-auto
   VERSION: ${{github.sha}}
-  NAME: go_cicd
   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
   PORT: ${{ secrets.PORT }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
@@ -17,52 +21,57 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: build
+      - name: Checkout code
+        uses: actions/checkout@v4.1.7
+
+      - name: Docker Setup Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3.6.1
         with:
-          path: /tmp/.buildx-cache
-          key: ${{runner.os}}-buildx-${{env.VERSION}}
+          path: /temp/.build-cache
+          key: ${{runner.os}}-buildx-${{github.sha}}
           restore-keys: |
             ${{runner.os}}-buildx-
-
-      - name: Login to ghcr
-        uses: docker/login-action@v1
+      - name: Login to Github container registry
+        uses: docker/login-action@v3.3.0
         with:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GHCR_TOKEN}}
-
+            
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          builder: ${{steps.buildx.outputs.name}}
           push: true
-          tags: ${{env.DOCKER_IMAGE}}
+          tags: ghcr.io/sangddong/pfweb-server-image:latest
 
   deploy:
     needs: build
     name: Deploy
     runs-on: self-hosted
     steps:
-      - name: Login to ghcr
-        uses: docker/login-action@v1
+      - uses: actions/checkout@v3
+      
+      - name: "Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GHCR_TOKEN}}
+          role-to-assume: ${{secrets.AWS_ARN}}
+          aws-region: ap-northeast-2
+          
+      - name: Verify Docker Login
+        run: |
+          echo ${{secrets.GHCR_TOKEN}} | sudo docker login ghcr.io -u ${{github.actor}} --password-stdin
       - name: Docker run
         run: |
-          sudo docker stop ${{ env.NAME }} || true
-          sudo docker rm ${{ env.NAME }} || true
-          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+          sudo docker stop pfweb-server-container || true
+          sudo docker rm pfweb-server-container || true
+          sudo docker rmi ghcr.io/sangddong/pfweb-server-image:latest || true
           sudo docker run -d -p 80:3001 \
-            --name ${{ env.NAME }} \
-            --restart always \
-            -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
-            -e PORT=${{ secrets.PORT }} \
-            -e CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
-            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            ${{ env.DOCKER_IMAGE }}:latest
+          --name pfweb-server-container \
+          --restart always \
+          -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+          -e PORT=${{ secrets.PORT }} \
+          -e CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+          -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          ghcr.io/sangddong/pfweb-server-image:latest
